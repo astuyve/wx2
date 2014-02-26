@@ -21,11 +21,29 @@ def parse(soup):
 	if content is None:
 		exit("Nothing")
 	blob = content.get_text().split('\n')
-	i = 1
+	altitudes = [0,3000,6000,9000,12000,18000,24000,30000,34000,39000]
 	for line in blob:
 		if len(line) == 69 and not (line.startswith('FT')):
-			data_string = line.split(' ')
-			print line
+			line = line.replace('     ',' 0000')
+			line = line.replace('   ',' 0000')
+			data_strings = line.split(' ')
+			airport_code = data_strings[0]
+			for data,altitude in zip(data_strings, altitudes):
+				if len(data) == 3:
+					pass
+				else:
+					if int(data[:2]) >= 36:
+						# Winds are OVER 99 knots. Follow WMO nomenclature: http://en.wikipedia.org/wiki/Winds_aloft
+						# Subtract 50 from DD, add 100 to SS
+						direction = str((int(data[:2]) - 50)) + '0'
+						speed = (int(data[2:4]) + 100)
+					else:
+						# Standard DDss format.
+						direction = data[:2] + '0'
+						speed = data[2:4]
+						#insert_db(airport_code, int(direction), int(speed))
+					print "Airport: {} Height: {} Dir: {} Speed {}".format(airport_code, altitude, direction, speed)
+
 		# Check we have an airport code and 3000ft data
 		'''
 		for data in data_string:
