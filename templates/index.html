@@ -1,0 +1,220 @@
+<html>
+<head>
+	<title>Speedometer</title>
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Play:700,400' type='text/css'>
+    
+    <script type="text/javascript" src="http://iop.io/js/vendor/d3.v3.min.js"></script>
+    <script type="text/javascript" src="http://iop.io/js/vendor/polymer/polymer.min.js"></script>
+    <script type="text/javascript" src="http://iop.io/js/iopctrl.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+
+    <style>
+		#slider {
+			width: 500px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		#speedometer {
+			margin: 0 auto;
+		}
+
+        body {
+            font: 16px arial;
+            background-color: #515151;
+			margin: 0 auto;
+        }
+
+        .unselectable {
+            -moz-user-select: -moz-none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* css formats for the gauge */
+        .gauge .domain {
+            stroke-width: 2px;
+            stroke: #fff;
+        }
+
+        .gauge .tick line {
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+        
+        .gauge line {
+            stroke: #fff;
+        }
+
+        .gauge .arc, .gauge .cursor {
+            opacity: 0;
+        }
+
+        .gauge .major {
+            fill: #fff;
+            font-size: 20px;
+            font-family: 'Play', verdana, sans-serif;
+            font-weight: normal;
+        }
+        
+        .gauge .indicator {
+            stroke: #EE3311;
+            fill: #000;
+            stroke-width: 4px;
+        }
+
+
+        .lineargauge {
+            font-size: 12px;
+        }
+
+        .lineargauge .axis path,
+        .lineargauge .axis line {
+            fill: none;
+            stroke: #ddd;
+        }
+
+        .lineargauge .lane, .lineargauge .cursor {
+            opacity: 0;
+        }
+
+        .lineargauge .tick {
+            fill: #ddd;
+        }
+
+        .lineargauge .major {
+            stroke-width: 2;
+        }
+
+        .lineargauge .ok {
+            fill: green;
+            opacity: 0.8;
+        }
+
+        .lineargauge .warning {
+            fill: yellow;
+            opacity: 0.8;
+        }
+
+        .lineargauge .fault {
+            fill: red;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<title>
+Wind Speed and Direction for MSP 3000 ASL
+</title>
+<body>
+	<center>
+	Current winds for <b><span id="display_airport_code"></span></b> at 3000ft MSL.<br>
+	Direction: <b><span id="display_direction"></span></b> (degrees)<br>
+	Speed: <b><span id="display_speed"></span></b> (knots)<br>
+<select name="airport_code" id="airport_code" onchange="updateWinds();">
+{% for wind in winds %}
+	<option value="{{wind.direction}} {{wind.speed}}">{{wind.airport_code}}</option>
+{% endfor %}
+</select>
+</center>
+    <div>
+        <span id="speedometer"></span>
+    </div>
+    
+    <script>
+
+$(function() {
+    var araObj = new Array( 10, 20, 30, 50, 75, 100, 200 );
+    
+    $(".slider").slider({
+            min: 0,
+            max: araObj.length,
+            value: 0,
+            create: function() {
+                $(this).children().addClass("ui-corner-all");
+                $(this).append($('<span></span>').css("left","0%").addClass("slider-digit").text(0));
+                for (i=0;i<=araObj.length;i++)
+                {
+                    $(this).append($('<span></span>').css("left",((i+1)*(100/araObj.length))+"%").addClass("slider-digit").text(araObj[i]));
+                };
+            }
+        });
+    
+    console.log(araObj);
+});
+
+        var svg = d3.select("#speedometer")
+                .append("svg:svg")
+                .attr("width", 900)
+                .attr("height", 900);
+
+        var gauge = iopctrl.arcslider()
+                .radius(120)
+                .events(false)
+                .indicator(iopctrl.defaultGaugeIndicator);
+        gauge.axis().orient("out")
+                .normalize(false)
+                .tickSubdivide(3)
+				/*.ticks(5)*/
+				.tickValues([90, 180, 270, 360])
+                /*.tickSize(10, 8, 10)*/
+                .tickPadding(5)
+                .scale(d3.scale.linear()
+                        .domain([0, 360])
+                        .range([0, 2*Math.PI]));
+
+          svg.append("g")
+		  		.attr("transform", "translate(50, 30)")
+                .attr("class", "gauge")
+                .call(gauge);
+
+		var slider = iopctrl.slider()
+                .width(50)
+                .events(false)
+  				.bands([
+					{"domain": [0,15], "span":[0.05, 0.5] , "class": "ok" },
+					{"domain": [15,20], "span":[0.05, 0.5] , "class": "warning" },
+					{"domain": [20,30], "span":[0.05, 0.5] , "class": "fault" }])
+                .indicator(iopctrl.defaultSliderIndicator)
+                .ease("elastic");
+        slider.axis().orient("left")
+                .tickSubdivide(4)
+                .tickSize(10, 8, 10)
+                .scale(d3.scale.linear()
+                        .domain([0,30])
+                        .range([0, -400]));
+
+        svg.append("g")
+                .attr("transform", "translate(500, 400)")
+                .attr("class", "lineargauge")
+                .call(slider);
+
+		var e = document.getElementById("airport_code");
+		var selected = e.options[e.selectedIndex].value;
+		var parse = selected.split(" ");
+		var direction = parse[0];
+		var speed = parse[1];
+        slider.value(speed);
+        gauge.value(direction);
+		document.getElementById("display_airport_code").innerHTML=e.options[e.selectedIndex].text;
+		document.getElementById("display_direction").innerHTML=direction;
+		document.getElementById("display_speed").innerHTML=speed;
+
+		function updateWinds() {
+			var e = document.getElementById("airport_code");
+			var selected = e.options[e.selectedIndex].value;
+			var parse = selected.split(" ");
+			var direction = parse[0];
+			var speed = parse[1];
+			slider.value(speed);
+			gauge.value(direction);
+			document.getElementById("display_airport_code").innerHTML=e.options[e.selectedIndex].text;
+			document.getElementById("display_direction").innerHTML=direction;
+			document.getElementById("display_speed").innerHTML=speed;
+		}
+    </script>
+</body>
+</html>
