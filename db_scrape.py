@@ -41,32 +41,17 @@ def parse(soup):
 						# Standard DDss format.
 						direction = data[:2] + '0'
 						speed = data[2:4]
-						#insert_db(airport_code, int(direction), int(speed))
-					print "Airport: {} Height: {} Dir: {} Speed {}".format(airport_code, altitude, direction, speed)
-
-		# Check we have an airport code and 3000ft data
-		'''
-		for data in data_string:
-			print line
-			if (len(data_string[0]) == 3 and data_string[1]):
-				airport_code = data_string[0]
-				direction_speed = data_string[1]
-				direction = direction_speed[:2] + '0'
-				speed = direction_speed[2:]
-				#insert_db(int(i), airport_code, int(direction), int(speed))
-				i+=1
-			else:
-				pass
-		conn.commit()
-		'''
+					insert_db(airport_code, altitude,direction, speed)
+					#print "Airport: {} Height: {} Dir: {} Speed {}".format(airport_code, altitude, direction, speed)
+			conn.commit()
 
 def init_db():
 	db.execute('''DROP TABLE IF EXISTS winds''')
 	db.execute('''CREATE TABLE winds
-		(id INTEGER, airport_code STRING, direction INTEGER, speed INTEGER)''')
+		(airport_code STRING, altitude INTEGER, direction INTEGER, speed INTEGER)''')
 
-def insert_db(wind_id, airport_code, direction, speed):
-	query = '''INSERT INTO winds VALUES ("%d", "%s","%d","%d")''' % (wind_id, airport_code, direction, speed)
+def insert_db(airport_code, altitude, direction, speed):
+	query = '''INSERT INTO winds VALUES ("{}","{}","{}","{}")'''.format(airport_code, altitude, direction, speed)
 	db.execute(query)
 
 if __name__ == '__main__':
