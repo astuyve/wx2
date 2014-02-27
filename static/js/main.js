@@ -91,22 +91,23 @@ $(document).ready( function() {
 
 
 function updateWinds() {
-
+	var e = document.getElementById("airport_code");
+	var selected = e.options[e.selectedIndex].text;
 	var request = $.ajax({
 		url: '/airport_code_json',
 		type: 'GET',
 		data: "airport_code=" + selected,
 		success: function(response) {
 			data = response['winds']
+			wind_indicator.value(data["3000"].speed)
+			gauge.value(data["3000"].direction)
+			document.getElementById("display_airport_code").innerHTML=selected;
+			document.getElementById("display_altitude").innerHTML="3000";
+			document.getElementById("display_direction").innerHTML=data["3000"].direction;
+			document.getElementById("display_speed").innerHTML=data["3000"].speed;
 		}
 	});
-	var e = document.getElementById("airport_code");
-	var selected = e.options[e.selectedIndex].text;
-	wind_indicator.value(data["3000"].speed)
-	gauge.value(data["3000"].direction)
-	document.getElementById("display_airport_code").innerHTML=selected;
-	document.getElementById("display_altitude").innerHTML="3000";
-	document.getElementById("display_direction").innerHTML=data["3000"].direction;
-	document.getElementById("display_speed").innerHTML=data["3000"].speed;
+
+
 }
 
