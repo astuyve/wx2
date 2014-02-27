@@ -1,5 +1,4 @@
 #slider {
-	width: 400px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -7,17 +6,19 @@
 	margin: 0 auto;
 }
 
-.altitude_selector {
-	width: 90%;
-	max-width: 700px;
-	margin-left: auto;
-	margin-right: auto;
-}
 body {
 	font: 16px arial;
 	background-color: #515151;
 	margin: 0 auto;
 	min-width: 450px;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+
+}
+
+#airport_code {
+	max-width: 80%;
 }
 
 .unselectable {

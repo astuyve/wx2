@@ -49,36 +49,31 @@ var steps = [3000,6000,9000,12000,18000,24000,30000,34000,39000];
 
 
 $(document).ready( function() {
-		$('.altitude_selector').slider({
-			value: 3000,
-			min: 3000,
-			max: 39000,
-			steps: [3000,6000,9000,12000,18000,24000,30000,34000,39000],
-			change: function(event, ui){
-				wind_indicator.value(data[ui.value].speed)
-				gauge.value(data[ui.value].direction)
-				document.getElementById("display_altitude").innerHTML = ui.value
-				document.getElementById("display_direction").innerHTML=data[ui.value].direction;
-				document.getElementById("display_speed").innerHTML=data[ui.value].speed;
-			},
-			slide: function(event, ui) {
-				var stepValues = $(this).slider("option", "steps"),
-					distance = [],
-					minDistance = $(this).slider("option", "max"),
-					minI;
-				$.each(stepValues, function(i, val) {
-					distance[i] = Math.abs( ui.value - val );
-						if ( distance[i] < minDistance ) {
-							minDistance = distance[i];
-							minI = i;
-						}
-				});
-			    if ( minDistance ) {
-					$(this).slider("value", stepValues[ minI ]);
-					return false;
-				}
+	var altitude_slider = $('input#altitude_selector')[0];
+	$('input#altitude_selector').bind('change', function(event){
+		var distance = [],
+			minDistance = 39000,
+			minI;
+		$.each(steps, function(i, val) {
+			distance[i] = Math.abs( altitude_slider.value - val);
+			if ( distance[i] < minDistance) {
+				minDistance = distance[i];
+				minI = i;
 			}
 		});
+
+		if (minDistance) {
+			altitude_slider.value=steps[minI];
+			$(this).slider('refresh');
+			wind_indicator.value(data[altitude_slider.value].speed)
+			gauge.value(data[altitude_slider.value].direction)
+			document.getElementById("display_altitude").innerHTML = altitude_slider.value
+			document.getElementById("display_direction").innerHTML=data[altitude_slider.value].direction;
+			document.getElementById("display_speed").innerHTML=data[altitude_slider.value].speed;
+			return false;
+		}
+	});
+
 	var e = document.getElementById("airport_code");
 	var selected = e.options[e.selectedIndex].text;
 	wind_indicator.value(data["3000"].speed)

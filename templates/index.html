@@ -3,8 +3,7 @@
 	var data = {{winds|safe}};
 </script>
 <body>
-	<center>
-		Current winds for <b><span id="display_airport_code"></span></b> at <b><span id="display_altitude"></span>ft</b> MSL.<br>
+	Current winds for <b><span id="display_airport_code"></span></b> at <b><span id="display_altitude"></span>ft</b> MSL.<br>
 	Direction: <b><span id="display_direction"></span></b> (degrees)<br>
 	Speed: <b><span id="display_speed"></span></b> (knots)<br>
 <select name="airport_code" id="airport_code" onchange="updateWinds();">
@@ -12,9 +11,10 @@
 <option value="{{airport.airport_code}}"{% if airport.airport_code == "MSP" %}selected="MSP"{% endif %}>{{airport.airport_code}}</option>
 {% endfor %}
 </select>
-</center>
 <div>
-		<div class="altitude_selector"></div>
+	<div data-role="fieldcontain">
+		<input class="altitude_selector" type="range" id="altitude_selector" value="3000" min="3000" max="39000"/>
+	</div>
 		<span id="speedometer"></span>
 </div>
 {% include 'footer.html' %}
