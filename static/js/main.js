@@ -28,15 +28,15 @@ var wind_indicator = iopctrl.slider()
 		.events(false)
 		.bands([
 			{"domain": [0,15], "span":[0.05, 0.5] , "class": "ok" },
-			{"domain": [15,20], "span":[0.05, 0.5] , "class": "warning" },
-			{"domain": [20,30], "span":[0.05, 0.5] , "class": "fault" }])
+			{"domain": [15,25], "span":[0.05, 0.5] , "class": "warning" },
+			{"domain": [25,100], "span":[0.05, 0.5] , "class": "fault" }])
 		.indicator(iopctrl.defaultSliderIndicator)
 		.ease("elastic");
 wind_indicator.axis().orient("left")
 		.tickSubdivide(4)
 		.tickSize(10, 8, 10)
 		.scale(d3.scale.linear()
-				.domain([0,30])
+				.domain([0,100])
 				.range([0, -400]));
 
 svg.append("g")
@@ -45,7 +45,7 @@ svg.append("g")
 		.call(wind_indicator);
 
 
-var steps = ["3000","6000","9000","12000","18000","24000","30000","34000","39000"];
+var steps = [3000,6000,9000,12000,18000,24000,30000,34000,39000];
 
 
 $(document).ready( function() {
@@ -53,20 +53,44 @@ $(document).ready( function() {
 			value: 3000,
 			min: 3000,
 			max: 39000,
-			step: 3000,
+			steps: [3000,6000,9000,12000,18000,24000,30000,34000,39000],
+			change: function(event, ui){
+				wind_indicator.value(data[ui.value].speed)
+				gauge.value(data[ui.value].direction)
+				document.getElementById("display_altitude").innerHTML = ui.value
+				document.getElementById("display_direction").innerHTML=data[ui.value].direction;
+				document.getElementById("display_speed").innerHTML=data[ui.value].speed;
+			},
 			slide: function(event, ui) {
-				$("#altitudes").val(steps[ui.value]);
-				/*wind_indicator.value(data[ui.value].speed)
-				guage.value(data[ui.value].direction)*/
-				console.log(data)
+				var stepValues = $(this).slider("option", "steps"),
+					distance = [],
+					minDistance = $(this).slider("option", "max"),
+					minI;
+				$.each(stepValues, function(i, val) {
+					distance[i] = Math.abs( ui.value - val );
+						if ( distance[i] < minDistance ) {
+							minDistance = distance[i];
+							minI = i;
+						}
+				});
+			    if ( minDistance ) {
+					$(this).slider("value", stepValues[ minI ]);
+					return false;
+				}
 			}
 		});
+	var e = document.getElementById("airport_code");
+	var selected = e.options[e.selectedIndex].text;
+	wind_indicator.value(data["3000"].speed)
+	gauge.value(data["3000"].direction)
+	document.getElementById("display_airport_code").innerHTML=selected;
+	document.getElementById("display_altitude").innerHTML="3000";
+	document.getElementById("display_direction").innerHTML=data["3000"].direction;
+	document.getElementById("display_speed").innerHTML=data["3000"].speed;
 });
 
 
 function updateWinds() {
-	var e = document.getElementById("airport_code");
-	var selected = e.options[e.selectedIndex].text;
 
 	var request = $.ajax({
 		url: '/airport_code_json',
@@ -74,17 +98,15 @@ function updateWinds() {
 		data: "airport_code=" + selected,
 		success: function(response) {
 			data = response['winds']
-			console.log(data)
 		}
 	});
-
-	var parse = selected.split(" ");
-	var direction = parse[0];
-	var speed = parse[1];
-	wind_indicator.value(speed);
-	gauge.value(direction);
-	document.getElementById("display_airport_code").innerHTML=e.options[e.selectedIndex].text;
-	document.getElementById("display_direction").innerHTML=direction;
-	document.getElementById("display_speed").innerHTML=speed;
+	var e = document.getElementById("airport_code");
+	var selected = e.options[e.selectedIndex].text;
+	wind_indicator.value(data["3000"].speed)
+	gauge.value(data["3000"].direction)
+	document.getElementById("display_airport_code").innerHTML=selected;
+	document.getElementById("display_altitude").innerHTML="3000";
+	document.getElementById("display_direction").innerHTML=data["3000"].direction;
+	document.getElementById("display_speed").innerHTML=data["3000"].speed;
 }
 

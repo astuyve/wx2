@@ -35,16 +35,22 @@ def query_db(query, args=(), one=False):
 def index():
 	query = ''' SELECT altitude,direction,speed FROM winds WHERE airport_code="MSP" '''
 	winds = query_db(query)
+	result = {}
+	for data in winds:
+		result[data['altitude']]= {"direction":data['direction'], "speed":data['speed']}
 	query_airports = ''' SELECT DISTINCT(airport_code) FROM winds '''
 	airports = query_db(query_airports)
-	return render_template('index.html', winds=winds, airports=airports)
+	return render_template('index.html', winds=result, airports=airports)
 
 @app.route('/airport_code_json', methods=['GET'])
 def airport_code_json():
 	airport_code = request.args.get('airport_code', None)
 	query = ''' SELECT altitude,direction,speed FROM winds WHERE airport_code="{}" '''.format(airport_code)
-	results = query_db(query)
-	return jsonify(winds=results)
+	winds = query_db(query)
+	result = {}
+	for data in winds:
+		result[data['altitude']]= {"direction":data['direction'], "speed":data['speed']}
+	return jsonify(winds=result)
 
 if __name__ == '__main__':
 	app.run()
