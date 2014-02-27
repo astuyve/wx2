@@ -1,7 +1,7 @@
 var svg = d3.select("#speedometer")
 		.append("svg:svg")
-		.attr("width", 900)
-		.attr("height", 900);
+		.attr("width", 500)
+		.attr("height", 500);
 
 var gauge = iopctrl.arcslider()
 		.radius(120)
@@ -19,7 +19,7 @@ gauge.axis().orient("out")
 				.range([0, 2*Math.PI]));
 
   svg.append("g")
-		.attr("transform", "translate(50, 30)")
+		.attr("transform", "translate(30, 30)")
 		.attr("class", "gauge")
 		.call(gauge);
 
@@ -40,7 +40,7 @@ wind_indicator.axis().orient("left")
 				.range([0, -400]));
 
 svg.append("g")
-		.attr("transform", "translate(500, 400)")
+		.attr("transform", "translate(400, 400)")
 		.attr("class", "lineargauge")
 		.call(wind_indicator);
 
