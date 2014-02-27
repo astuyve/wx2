@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from bs4 import BeautifulSoup
 import urllib2
-import os, sys
+import os, sys, re
 import sqlite3
 
 conn = sqlite3.connect('database.db')
@@ -9,7 +9,7 @@ db = conn.cursor()
 
 def init():
 	init_db()
-	url = 'http://aviationweather.gov/products/nws/winds/?area=chicago&fint=06'
+	url = 'http://aviationweather.gov/products/nws/all'
 	usock = urllib2.urlopen(url)
 	source = usock.read()
 	usock.close()
@@ -24,15 +24,20 @@ def parse(soup):
 	altitudes = [0,3000,6000,9000,12000,18000,24000,30000,34000,39000]
 	for line in blob:
 		if len(line) == 69 and not (line.startswith('FT')):
-			line = line.replace('     ',' 0000')
-			line = line.replace('   ',' 0000')
+			# TODO - be better about filtering these columns. Either remove lamba function or regex.
+			line = re.sub('[\s]{5}', ' 0000', line)
 			data_strings = line.split(' ')
+			data_strings = filter(lambda blank: blank != '', data_strings)
 			airport_code = data_strings[0]
 			for data,altitude in zip(data_strings, altitudes):
 				if len(data) == 3:
 					pass
 				else:
-					if int(data[:2]) >= 36:
+					if int(data[:2]) == 99:
+						# Winds are light and variable
+						direction = '00'
+						speed = '00'
+					elif int(data[:2]) >= 36:
 						# Winds are OVER 99 knots. Follow WMO nomenclature: http://en.wikipedia.org/wiki/Winds_aloft
 						# Subtract 50 from DD, add 100 to SS
 						direction = str((int(data[:2]) - 50)) + '0'
