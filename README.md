@@ -9,7 +9,8 @@ The World Meteorological Organization [nomenclature](http://en.wikipedia.org/wik
 I scrape it from their site 4 times daily (when it is updated), parse it, then display it.
 
 ##Where is the data coming from
-[NOAA makes it available here](http://aviationweather.gov/products/nws/winds/?area=chicago&fint=06)
+[NOAA makes it available here](http://aviationweather.gov/products/nws/all)
+It covers the contintental US.
 
 ##Why are you so bad at javascript?
 Sucking at something is the first step towards actually being kinda good at something.
