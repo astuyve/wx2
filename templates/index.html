@@ -3,6 +3,7 @@
 	var data = {{winds|safe}};
 </script>
 <body>
+	<h2>Winds Aloft Visualizer</h2>
 	Current winds for <b><span id="display_airport_code"></span></b> at <b><span id="display_altitude"></span>ft</b> MSL.<br>
 	Direction: <b><span id="display_direction"></span></b> (degrees)<br>
 	Speed: <b><span id="display_speed"></span></b> (knots)<br>
@@ -14,6 +15,7 @@
 <div>
 	<div data-role="fieldcontain">
 		<input class="altitude_selector" type="range" id="altitude_selector" value="3000" min="3000" max="39000"/>
+		Slide to change altitude
 	</div>
 		<span id="speedometer"></span>
 </div>
