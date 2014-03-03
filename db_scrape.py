@@ -37,7 +37,7 @@ def parse(soup):
 						# Winds are light and variable
 						direction = '00'
 						speed = '00'
-					elif int(data[:2]) >= 36:
+					elif int(data[:2]) > 36:
 						# Winds are OVER 99 knots. Follow WMO nomenclature: http://en.wikipedia.org/wiki/Winds_aloft
 						# Subtract 50 from DD, add 100 to SS
 						direction = str((int(data[:2]) - 50)) + '0'
