@@ -24,3 +24,6 @@ Sucking at something is the first step towards actually being kinda good at some
 ###Getting fresh data
 Run the scraper.
 `python db_scrape.py`
+
+###How can I help?
+Fork it and make some changes then send me a pull request!
