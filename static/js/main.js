@@ -47,6 +47,13 @@ svg.append("g")
 
 var steps = [3000,6000,9000,12000,18000,24000,30000,34000,39000];
 
+function set_attrs(altitude) {
+	wind_indicator.value(data[altitude].speed);
+	gauge.value(data[altitude].direction);
+	$('#display_altitude').html(altitude);
+	$('#display_direction').html(data[altitude].direction);
+	$('#display_speed').html(data[altitude].speed);
+}
 
 $(document).ready( function() {
 	var altitude_slider = $('input#altitude_selector')[0];
@@ -65,41 +72,28 @@ $(document).ready( function() {
 		if (minDistance) {
 			altitude_slider.value=steps[minI];
 			$(this).slider('refresh');
-			wind_indicator.value(data[altitude_slider.value].speed)
-			gauge.value(data[altitude_slider.value].direction)
-			document.getElementById("display_altitude").innerHTML = altitude_slider.value
-			document.getElementById("display_direction").innerHTML=data[altitude_slider.value].direction;
-			document.getElementById("display_speed").innerHTML=data[altitude_slider.value].speed;
+			set_attrs(altitude_slider.value);
 			return false;
 		}
 	});
 
-	var e = document.getElementById("airport_code");
-	var selected = e.options[e.selectedIndex].text;
-	wind_indicator.value(data["3000"].speed)
-	gauge.value(data["3000"].direction)
-	document.getElementById("display_airport_code").innerHTML=selected;
-	document.getElementById("display_altitude").innerHTML="3000";
-	document.getElementById("display_direction").innerHTML=data["3000"].direction;
-	document.getElementById("display_speed").innerHTML=data["3000"].speed;
+	var selected = $('#airport_code option:selected').text();
+	set_attrs("3000");
+	$('display_airport_code').html(selected);
 });
 
 
 function updateWinds() {
-	var e = document.getElementById("airport_code");
-	var selected = e.options[e.selectedIndex].text;
+	var e = $('#airport_code');
+	var selected = $('#airport_code option:selected').text();
 	var request = $.ajax({
 		url: '/airport_code_json',
 		type: 'GET',
 		data: "airport_code=" + selected,
 		success: function(response) {
 			data = response['winds']
-			wind_indicator.value(data["3000"].speed)
-			gauge.value(data["3000"].direction)
-			document.getElementById("display_airport_code").innerHTML=selected;
-			document.getElementById("display_altitude").innerHTML="3000";
-			document.getElementById("display_direction").innerHTML=data["3000"].direction;
-			document.getElementById("display_speed").innerHTML=data["3000"].speed;
+			$('#display_airport_code').html(selected);
+			set_attrs("3000")
 		}
 	});
 
