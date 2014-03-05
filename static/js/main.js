@@ -79,7 +79,7 @@ $(document).ready( function() {
 
 	var selected = $('#airport_code option:selected').text();
 	set_attrs("3000");
-	$('display_airport_code').html(selected);
+	$('#display_airport_code').html(selected);
 });
 
 
