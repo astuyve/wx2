@@ -4,7 +4,7 @@ var svg = d3.select("#speedometer")
 		.attr("height", 500);
 
 var gauge = iopctrl.arcslider()
-		.radius(120)
+		.radius(100)
 		.events(false)
 		.indicator(iopctrl.defaultGaugeIndicator);
 gauge.axis().orient("out")
@@ -19,7 +19,7 @@ gauge.axis().orient("out")
 				.range([0, 2*Math.PI]));
 
   svg.append("g")
-		.attr("transform", "translate(30, 30)")
+		.attr("transform", "translate(0, 30)")
 		.attr("class", "gauge")
 		.call(gauge);
 
@@ -40,12 +40,12 @@ wind_indicator.axis().orient("left")
 				.range([0, -400]));
 
 svg.append("g")
-		.attr("transform", "translate(400, 400)")
+		.attr("transform", "translate(300, 400)")
 		.attr("class", "lineargauge")
 		.call(wind_indicator);
 
 
-var steps = [3000,6000,9000,12000,18000,24000,30000,34000,39000];
+var steps = [0,3000,6000,9000,12000,18000,24000,30000,34000,39000];
 
 function set_attrs(altitude) {
 	wind_indicator.value(data[altitude].speed);
@@ -78,7 +78,7 @@ $(document).ready( function() {
 	});
 
 	var selected = $('#airport_code option:selected').text();
-	set_attrs("3000");
+	set_attrs("0");
 	$('#display_airport_code').html(selected);
 });
 
@@ -93,7 +93,7 @@ function updateWinds() {
 		success: function(response) {
 			data = response['winds']
 			$('#display_airport_code').html(selected);
-			set_attrs("3000")
+			set_attrs("0")
 		}
 	});
 
