@@ -3,14 +3,13 @@
 	margin-right: auto;
 }
 #speedometer {
-	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 body {
 	font: 16px arial;
 	background-color: #515151;
-	margin: 0 auto;
-	min-width: 450px;
 	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
