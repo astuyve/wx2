@@ -16,10 +16,15 @@ It covers the contintental US.
 Sucking at something is the first step towards actually being kinda good at something.
 
 ###How do I get started?
-- Install pip, virtualenv, and python
-- `virtualenv venv`
-- `source ./venv/bin/activate`
-- `python app.py`
+You will need to install Python ~>2.7.x, pip, and virtualenv
+
+- `git clone https://github.com/astuyve/wx2.git`
+- `cd wx2`
+- `virtualenv venv` (Create a new virtual environment)
+- `source ./venv/bin/activate` (Start environment)
+- `pip install -r requirements.txt` (Install dependencies)
+- `python db_scrape.py` (Run data scraper to populate Sqlite database)
+- `python app.py` (Start the Flask web server on localhost:5000)
 
 ###Getting fresh data
 Run the scraper.
