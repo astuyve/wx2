@@ -1,100 +1,100 @@
 #slider {
-	margin-left: auto;
-	margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 #speedometer {
-	margin-left: auto;
-	margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 body {
-	font: 16px arial;
-	background-color: #515151;
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
+  font: 16px arial;
+  background-color: #515151;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 
 }
 
 #airport_code {
-	max-width: 80%;
+  max-width: 80%;
 }
 
 .unselectable {
-	-moz-user-select: -moz-none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /* css formats for the gauge */
 .gauge .domain {
-	stroke-width: 2px;
-	stroke: #fff;
+  stroke-width: 2px;
+  stroke: #fff;
 }
 
 .gauge .tick line {
-	stroke: #fff;
-	stroke-width: 2px;
+  stroke: #fff;
+  stroke-width: 2px;
 }
 
 .gauge line {
-	stroke: #fff;
+  stroke: #fff;
 }
 
 .gauge .arc, .gauge .cursor {
-	opacity: 0;
+  opacity: 0;
 }
 
 .gauge .major {
-	fill: #fff;
-	font-size: 20px;
-	font-family: 'Play', verdana, sans-serif;
-	font-weight: normal;
+  fill: #fff;
+  font-size: 20px;
+  font-family: 'Play', verdana, sans-serif;
+  font-weight: normal;
 }
 
 .gauge .indicator {
-	stroke: #EE3311;
-	fill: #000;
-	stroke-width: 4px;
+  stroke: #EE3311;
+  fill: #000;
+  stroke-width: 4px;
 }
 
 
 .lineargauge {
-	font-size: 12px;
+  font-size: 12px;
 }
 
 .lineargauge .axis path,
 .lineargauge .axis line {
-	fill: none;
-	stroke: #ddd;
+  fill: none;
+  stroke: #ddd;
 }
 
 .lineargauge .lane, .lineargauge .cursor {
-	opacity: 0;
+  opacity: 0;
 }
 
 .lineargauge .tick {
-	fill: #ddd;
+  fill: #ddd;
 }
 
 .lineargauge .major {
-	stroke-width: 2;
+  stroke-width: 2;
 }
 
 .lineargauge .ok {
-	fill: green;
-	opacity: 0.8;
+  fill: green;
+  opacity: 0.8;
 }
 
 .lineargauge .warning {
-	fill: yellow;
-	opacity: 0.8;
+  fill: yellow;
+  opacity: 0.8;
 }
 
 .lineargauge .fault {
-	fill: red;
-	opacity: 0.8;
+  fill: red;
+  opacity: 0.8;
 }
 
